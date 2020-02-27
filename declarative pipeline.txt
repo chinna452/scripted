@@ -1,0 +1,48 @@
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('continous download')
+        {
+            steps
+            {
+                git 'https://github.com/selenium-saikrishna/maven.git'
+            }
+        }
+    
+        stage('continous build')
+        {
+             steps
+             {
+                    sh label: '', script: 'mvn package'
+             }
+        }
+        stage('continous deployment')
+        {
+             steps
+             {
+                sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/declar14/webapp/target/webapp.war ubuntu@172.31.31.34:/var/lib/tomcat8/webapps/testing.jar' 
+             }
+        }
+        stage('continous testing')
+        {
+            steps
+            {
+                git 'https://github.com/selenium-saikrishna/TestingNew.git'
+                sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/declar14/webapp/target/webapp.war ubuntu@172.31.19.107:/var/lib/tomcat8/webapps/testing.jar'
+            }
+        }
+        stage('continous delivery')
+        {
+            steps
+            {
+               sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/declar14/webapp/target/webapp.war ubuntu@172.31.19.107:/var/lib/tomcat8/webapps/testing.jar' 
+            }
+        }
+    }
+}
+    
+
+        
+    
